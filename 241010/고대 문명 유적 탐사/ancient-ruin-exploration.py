@@ -74,19 +74,25 @@ for p in range(k):
             scores.append(_180)
             scores.append(_270)
     scores = sorted(scores,key=lambda x : (-x[0][0],x[3],x[2],x[1]))
-    tmp,x,y = scores[0], scores[0][1], scores[0][2]
-    a = zeroize(rotate(a,x,y),tmp[0][1])
-    if not tmp[0][1]:
+    candidates,x,y = scores[0][0][1], scores[0][1], scores[0][2]
+    if not candidates:
         break
+    if scores[0][3] == 90:
+        a = rotate(a,x,y)
+    elif scores[0][3] == 180:
+        a = rotate(rotate(a,x,y),x,y)
+    elif scores[0][3] == 270:
+        a = rotate(rotate(rotate(a,x,y),x,y),x,y)
+    a = zeroize(a,candidates)
     a = replenish(a)
-    res += tmp[0][0]
+    res += scores[0][0][0]
 
     while True:
-        score, coordinates = BFS(a)
-        if not coordinates:
+        score, coordidates = BFS(a)
+        if not coordidates:
             break
         res += score
-        a = zeroize(a,coordinates)
+        a = zeroize(a,coordidates)
         a = replenish(a)
     answer.append(res)
 print(*answer)
